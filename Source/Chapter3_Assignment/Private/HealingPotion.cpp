@@ -11,5 +11,6 @@ AHealingPotion::AHealingPotion()
 
 void AHealingPotion::ActivateItem(AActor* Activator)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Health Gained %d hp"), HealAmount));
 	DestroyItem();
 }

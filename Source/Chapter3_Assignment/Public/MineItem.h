@@ -15,10 +15,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item")
 	float ExplosionDelay;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	float ExplosionRadius;
+	int32 ExplosionDamage;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	float ExplosionDamage;
+	float ExplosionRadius;
+
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="ExplosionCollision")
+	USphereComponent* ExplosionRadiusComp;
+
+	FTimerHandle ExplosionTimerHandle;
 
 	virtual void ActivateItem(AActor* Activator) override;
 
+	void Explode();
 };
