@@ -2,6 +2,8 @@
 #include "Components/SphereComponent.h"
 #include "TimerManager.h"
 
+#include "Kismet/GameplayStatics.h"
+
 AMineItem::AMineItem()
 {
 	ExplosionDelay = 5.0f;
@@ -37,7 +39,7 @@ void AMineItem::Explode()
 	{
 		if (Actor && Actor->ActorHasTag("Player"))	//만약 이 액터가 플레이어라면?
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Player taken damaged %d by Mine"), ExplosionDamage));	//데미지를 준다.
+			UGameplayStatics::ApplyDamage(Actor, ExplosionDamage, nullptr, this, UDamageType::StaticClass());
 		}
 	}
 	DestroyItem();	//반복문 끝난 뒤 부수기

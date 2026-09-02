@@ -2,7 +2,7 @@
 
 
 #include "CoinItem.h"
-
+#include "KedisGameState.h"
 ACoinItem::ACoinItem()
 {
 	PointValue = 0;
@@ -13,7 +13,16 @@ void ACoinItem::ActivateItem(AActor* Activator)
 {
 	if (Activator && Activator->ActorHasTag("Player"))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Player Gained %d points!"), PointValue));
+		if (UWorld* World = GetWorld())
+		{
+			if (AKedisGameState* GameState = World->GetGameState<AKedisGameState>())
+			{
+				GameState->AddScore(PointValue);
+
+				GameState->OnCoinCollected();
+			}
+		}
+
 		DestroyItem();
 	}
 }

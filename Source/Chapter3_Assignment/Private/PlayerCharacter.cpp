@@ -36,6 +36,9 @@ APlayerCharacter::APlayerCharacter()
 	SprintSpeed = NormalSpeed * SprintSpeedMultiplier;
 
 	GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+
+	MaxHealth = 100;
+	Health = MaxHealth;
 }
 
 // Called when the game starts or when spawned
@@ -111,6 +114,37 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 			}
 		}
 	}
+}
+
+float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	Health = FMath::Clamp(Health - DamageAmount, 0.0f, MaxHealth);
+	UE_LOG(LogTemp, Warning, TEXT("Health down, -%f, %f"), DamageAmount, Health);
+
+	if (Health <= 0.0f)
+	{
+		OnDeath();
+	}
+
+	return ActualDamage;
+}
+
+void APlayerCharacter::OnDeath()
+{
+
+}
+
+float APlayerCharacter::GetHealth() const
+{
+	return Health;
+}
+
+void APlayerCharacter::AddHealth(float Amount)
+{
+	Health = FMath::Clamp(Health + Amount, 0.0f, MaxHealth);
+	UE_LOG(LogTemp, Warning, TEXT("Health up, -%f, %f"), Amount, Health);
 }
 
 void APlayerCharacter::Move(const FInputActionValue& value)
